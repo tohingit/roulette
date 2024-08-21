@@ -84,6 +84,18 @@
         .wheel div:nth-child(8) {
             transform: rotate(315deg);
         }
+        .ball {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            transition: all 4s ease-out;
+        }
         .spin-btn {
             margin-top: 20px;
             padding: 10px 20px;
@@ -117,6 +129,7 @@
             <div></div>
             <div></div>
             <div></div>
+            <div class="ball" id="ball"></div>
         </div>
         <button class="spin-btn" onclick="spin()">Spin</button>
         <div class="result" id="result"></div>
@@ -125,10 +138,15 @@
     <script>
         function spin() {
             const wheel = document.getElementById('wheel');
+            const ball = document.getElementById('ball');
             const result = document.getElementById('result');
             const degree = Math.floor(Math.random() * 360) + 720; // 720 to ensure at least two full spins
             wheel.style.transition = 'transform 4s ease-out';
             wheel.style.transform = `rotate(${degree}deg)`;
+
+            const ballDegree = degree % 360 + (45 * Math.floor(Math.random() * 8));
+            ball.style.transition = 'all 4s ease-out';
+            ball.style.transform = `translateX(-50%) rotate(${ballDegree}deg) translate(85px)`;
 
             setTimeout(() => {
                 const normalizedDegree = degree % 360;
