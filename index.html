@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paintings Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .telegram-login-container {
+            display: none; /* Hide initially */
+        }
+
+        .purchase-btn {
+            cursor: pointer; /* Ensure cursor changes on hover */
+        }
+
+        .painting {
+            position: relative;
+            text-align: center;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            z-index: 100;
+        }
+
+        .arrow-left {
+            left: 0;
+        }
+
+        .arrow-right {
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Paintings Gallery</h1>
+    </header>
+    <main>
+        <section class="gallery">
+            <div class="painting" id="painting1">
+                <div class="arrow arrow-left" onclick="scrollGallery('painting1', -1)">&#10094;</div>
+                <img src="painting1.jpg" alt="Painting 1">
+                <div class="arrow arrow-right" onclick="scrollGallery('painting1', 1)">&#10095;</div>
+                <h2>Title of Painting 1</h2>
+                <p>Artist Name</p>
+                <button class="purchase-btn" onclick="handlePurchaseClick(this)">Purchase</button>
+            </div>
+            <div class="painting" id="painting2">
+                <div class="arrow arrow-left" onclick="scrollGallery('painting2', -1)">&#10094;</div>
+                <img src="painting2.jpg" alt="Painting 2">
+                <div class="arrow arrow-right" onclick="scrollGallery('painting2', 1)">&#10095;</div>
+                <h2>Title of Painting 2</h2>
+                <p>Artist Name</p>
+                <button class="purchase-btn" onclick="handlePurchaseClick(this)">Purchase</button>
+            </div>
+            <div class="painting" id="painting3">
+                <div class="arrow arrow-left" onclick="scrollGallery('painting3', -1)">&#10094;</div>
+                <img src="painting3.jpg" alt="Painting 3">
+                <div class="arrow arrow-right" onclick="scrollGallery('painting3', 1)">&#10095;</div>
+                <h2>Title of Painting 3</h2>
+                <p>Artist Name</p>
+                <button class="purchase-btn" onclick="handlePurchaseClick(this)">Purchase</button>
+            </div>
+            <!-- Add more paintings as needed -->
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Paintings Gallery. All rights reserved.</p>
+    </footer>
+
+    <!-- Telegram Login Widget -->
+    <div class="telegram-login-container">
+        <div id="telegram-login"></div>
+    </div>
+
+    <script async src="https://telegram.org/js/telegram-widget.js?22"
+            data-telegram-login="treasutetestbot"
+            data-size="large"
+            data-onauth="onTelegramAuth(user)"
+            data-request-access="write"></script>
+    <script type="text/javascript">
+        function onTelegramAuth(user) {
+            alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+        }
+
+        // Automatically trigger Telegram login when the page loads
+        window.addEventListener('load', function() {
+            // Show the Telegram login container
+            document.querySelector('.telegram-login-container').style.display = 'block';
+
+            // Load Telegram script dynamically
+            const telegramLoginDiv = document.getElementById('telegram-login');
+            const telegramScript = document.createElement('script');
+            telegramScript.src = "https://telegram.org/js/telegram-widget.js?22";
+            telegramScript.setAttribute('data-telegram-login', 'treasutetestbot');
+            telegramScript.setAttribute('data-size', 'large');
+            telegramScript.setAttribute('data-onauth', 'onTelegramAuth(user)');
+            telegramScript.setAttribute('data-request-access', 'write');
+            telegramLoginDiv.appendChild(telegramScript);
+        });
+
+        // Function to handle purchase button click
+        function handlePurchaseClick(button) {
+            // Add vibration effect (if supported)
+            if (navigator.vibrate) {
+                navigator.vibrate(100); // Vibrate for 100ms
+            }
+
+            // Add your purchase logic here
+            // For example, you can redirect to a purchase page or show a purchase modal
+            console.log('Purchase button clicked for:', button.parentNode.querySelector('h2').innerText);
+        }
+
+        // Function to scroll gallery left or right
+        const paintings = {
+            'painting1': ['painting1.jpg', 'painting1b.jpg', 'painting1c.jpg'],
+            'painting2': ['painting2.jpg', 'painting2b.jpg', 'painting2c.jpg'],
+            'painting3': ['painting3.jpg', 'painting3b.jpg', 'painting3c.jpg']
+        };
+
+        function scrollGallery(paintingId, direction) {
+            const paintingElement = document.getElementById(paintingId);
+            const imgElement = paintingElement.querySelector('img');
+            const currentSrc = imgElement.src.split('/').pop();
+            const currentIndex = paintings[paintingId].indexOf(currentSrc);
+
+            let newIndex = currentIndex + direction;
+            if (newIndex < 0) {
+                newIndex = paintings[paintingId].length - 1;
+            } else if (newIndex >= paintings[paintingId].length) {
+                newIndex = 0;
+            }
+
+            imgElement.src = paintings[paintingId][newIndex];
+        }
+    </script>
+</body>
+</html>
